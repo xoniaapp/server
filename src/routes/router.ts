@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-import SocketGateway from "../socket/gateway";
+import SocketGateway from "../socket/gateway.socket";
 
 export default async function router(fastify: FastifyInstance) {
   // Socket Gateway
@@ -17,7 +17,7 @@ export default async function router(fastify: FastifyInstance) {
         timestamp: Date.now(),
         environment: process.env.NODE_ENV,
         build_sha: process.env.COMMIT_SHA,
-      }
-    })
-  })
+      },
+    });
+  });
 }

@@ -8,12 +8,96 @@ datasource db {
 }
 
 model Account {
-  id       String  @id @unique @default(cuid()) @map("_id")
-  username String
-  suffix   Int
-  email    String
-  verified Boolean
+  id        String  @id @unique @default(cuid()) @map("_id")
+  username  String
+  image_url String
+  suffix    Int
+  email     String
+  verified  Boolean
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Guilds   Guild[]
+  Invites  Invite[]
+  Messages Message[]
+}
+
+// TODO: Profile support.
+model Profile {
+  id String @id @unique @default(cuid()) @map("_id")
+}
+
+model Guild {
+  id        String  @id @unique @default(cuid()) @map("_id")
+  name      String
+  icon_url  String
+  banner_bg String
+  invite_bg String
+  partner   Boolean @default(false)
+  ownerId   String
+
+  invites Invite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner    Account   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  Channels Channel[]
+  Messages Message[]
+}
+
+model Channel {
+  id      String      @id @unique @default(cuid()) @map("_id")
+  name    String
+  type    ChannelType
+  private Boolean
+  guildId String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Messages  Message[]
+}
+
+model Message {
+  id String @id @unique @default(cuid()) @map("_id")
+
+  text     String
+  reaction String[]
+
+  authorId  String
+  channelId String
+  guildId   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author  Account @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  guild   Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+model Invite {
+  id           String @id @unique @default(cuid()) @map("_id")
+  code         String
+  guildId      String
+  generated_by String
+  time_used    Int
+  // TODO: Add expiry
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Account Account @relation(fields: [generated_by], references: [id], onDelete: Cascade)
+  Guild   Guild   @relation(fields: [guildId], references: [id])
+}
+
+enum ChannelType {
+  VOICE
+  ANNOUNCEMENT
+  FORUM
+  TEXT
+  STAGE
 }
