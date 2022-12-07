@@ -32,7 +32,7 @@ app.get("/health", (request, reply) => {
 const start = async (port: number) => {
     try {
         app.listen({ port: port, host: "0.0.0.0" }, () => {
-            log.info("Listening on http://localhost:");
+            log.info(`Listening on http://localhost:${port}`);
         });
     } catch (error) {
         process.exit(1);
