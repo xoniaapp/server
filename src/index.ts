@@ -1,7 +1,7 @@
 import fastify, { FastifyInstance } from "fastify";
 import * as dotenv from "dotenv";
 import cors from "@fastify/cors";
-import websocket from "@fastify/websocket"
+import websocket from "@fastify/websocket";
 import router from "./routes/router";
 import helmet from "@fastify/helmet";
 import log from "./utils/log";
@@ -17,10 +17,10 @@ app.register(cors, {
 });
 app.register(helmet);
 app.register(websocket, {
-  options: { maxPayload: 1048576 }
-})
+  options: { maxPayload: 1048576 },
+});
 
-app.register(router, { prefix: "/" })
+app.register(router, { prefix: "/" });
 
 const start = async (port: number) => {
   try {
