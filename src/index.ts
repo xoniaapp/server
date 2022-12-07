@@ -1,7 +1,9 @@
-import fastify, { FastifyInstance, FastifyRequest } from "fastify";
-import cors from "@fastify/cors";
-import helmet from "@fastify/helmet";
+import fastify, { FastifyInstance } from "fastify";
 import * as dotenv from "dotenv";
+import cors from "@fastify/cors";
+import websocket from "@fastify/websocket"
+import router from "./routes/router";
+import helmet from "@fastify/helmet";
 import log from "./utils/log";
 
 dotenv.config();
@@ -14,20 +16,11 @@ app.register(cors, {
   origin: process.env.ORIGIN || "*",
 });
 app.register(helmet);
+app.register(websocket, {
+  options: { maxPayload: 1048576 }
+})
 
-app.get("/health", (request, reply) => {
-  reply.status(200).send({
-    statusCode: 200,
-    message: "Success",
-    payload: {
-      status: "healthy",
-      uptime: process.uptime(),
-      timestamp: Date.now(),
-      environment: process.env.NODE_ENV,
-      build_sha: process.env.COMMIT_SHA,
-    },
-  });
-});
+app.register(router, { prefix: "/" })
 
 const start = async (port: number) => {
   try {
