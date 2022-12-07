@@ -1,0 +1,44 @@
+{
+  "name": "@xoniaapp/server-node",
+  "version": "0.0.0",
+  "description": "V4 server build with Node.js & TypeScript.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "export COMMIT_SHA=$(git rev-parse --short HEAD) NODE_ENV=production && ts-node ./src/index.ts",
+    "start:dev": "export COMMIT_SHA=$(git rev-parse --short HEAD) NODE_ENV=development && nodemon ./src/index.ts",
+    "start:prod": "export COMMIT_SHA=$(git rev-parse --short HEAD) NODE_ENV=production && node build/src/index.js",
+    "build": "tsc",
+    "db:push": "prisma db push",
+    "db:pull": "prisma db pull",
+    "db:generate": "prisma generate",
+    "clean": "rm -rf node_modules build",
+    "format": "prettier --write **/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xoniaapp/server-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/xoniaapp/server-node/issues"
+  },
+  "homepage": "https://github.com/xoniaapp/server-node#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.11",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.0",
+    "prisma": "^4.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.2.0",
+    "@fastify/helmet": "^10.1.0",
+    "@prisma/client": "^4.7.1",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.10.2"
+  }
+}
