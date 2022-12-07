@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-import SocketGateway from "../socket/gateway.socket";
+import SocketGateway from "../socket/socket.gateway";
 
 export default async function router(fastify: FastifyInstance) {
   // Socket Gateway
