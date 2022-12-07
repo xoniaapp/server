@@ -6,3 +6,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Account {
+  id       String  @id @unique @default(cuid()) @map("_id")
+  username String
+  suffix   Int
+  email    String
+  verified Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
