@@ -8,24 +8,47 @@ datasource db {
 }
 
 model Account {
-  id        String  @id @unique @default(cuid()) @map("_id")
+  id        String   @id @unique @default(cuid()) @map("_id")
   username  String
   image_url String
   suffix    Int
   email     String
   verified  Boolean
+  donor     Boolean
+  badges    String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   Guilds   Guild[]
+  Groups   Group[]
   Invites  Invite[]
   Messages Message[]
+  Friends  Friend[]
+  DMs      DM[]
 }
 
 // TODO: Profile support.
 model Profile {
   id String @id @unique @default(cuid()) @map("_id")
+}
+
+model Friend {
+  id        String  @id @unique @default(cuid()) @map("_id")
+  username  String
+  Account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+}
+
+model Group {
+  id       String    @id @unique @default(cuid()) @map("_id")
+  name     String
+  Owner    Account   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  owner_id String
+  Messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Guild {
@@ -35,14 +58,14 @@ model Guild {
   banner_bg String
   invite_bg String
   partner   Boolean @default(false)
-  ownerId   String
+  owner_id  String
 
   invites Invite[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  owner    Account   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  Owner    Account   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   Channels Channel[]
   Messages Message[]
 }
@@ -64,19 +87,22 @@ model Channel {
 model Message {
   id String @id @unique @default(cuid()) @map("_id")
 
-  text     String
-  reaction String[]
+  text       String
+  attachment String
+  reaction   String[]
 
   authorId  String
   channelId String
-  guildId   String
+  guildId   String?
+  groupId   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  author  Account @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  guild   Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  Author  Account @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  Guild   Guild?  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  Group   Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
 model Invite {
@@ -92,6 +118,14 @@ model Invite {
 
   Account Account @relation(fields: [generated_by], references: [id], onDelete: Cascade)
   Guild   Guild   @relation(fields: [guildId], references: [id])
+}
+
+model DM {
+  id        String  @id @unique @default(cuid()) @map("_id")
+  is_friend Boolean
+  author_id String
+  user_id   String
+  Account   Account @relation(fields: [author_id], references: [id])
 }
 
 enum ChannelType {
