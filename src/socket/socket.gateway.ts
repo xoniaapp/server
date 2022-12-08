@@ -8,13 +8,18 @@ const SocketGateway = async (fastify: FastifyInstance) => {
       reply.status(500).send({ error: "Requires a websocket connection" });
     },
     wsHandler: (connection, req) => {
-      connection.socket.on("message", (data: any) => {
-        connection.socket.send(
-          JSON.stringify({
-            message: "Hello, World!",
-          })
-        );
-      });
+  try {
+    connection.socket.on("message", (data: any) => {
+      connection.socket.send(
+        JSON.stringify({
+          message: "Connected to Websocket!",
+        })
+      );
+    });
+  } catch (e) {
+    console.log(e);
+    
+  }
     },
   });
 };

@@ -11,7 +11,7 @@ dotenv.config();
 const app: FastifyInstance = fastify({
   logger: true,
 });
-
+app.register(router, { prefix: "/" });
 app.register(cors, {
   origin: process.env.ORIGIN || "*",
 });
@@ -19,8 +19,6 @@ app.register(helmet);
 app.register(websocket, {
   options: { maxPayload: 1048576 },
 });
-
-app.register(router, { prefix: "/" });
 
 const start = async (port: number) => {
   try {

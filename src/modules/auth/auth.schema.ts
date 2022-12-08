@@ -1,0 +1,10 @@
+import { z } from 'zod';
+
+const SINGUP_SCHEMA = z.object({
+    username: z.string().max(32).describe('Some description for username'),
+    suffix: z.number().max(4).min(4),
+    email: z.string().email().trim(),
+    password: z.string().max(32).min(8),
+});
+
+export default { SINGUP_SCHEMA }
