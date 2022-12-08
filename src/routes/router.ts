@@ -1,7 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
 import SocketGateway from "../socket/socket.gateway";
-
 // import authRoute from "../modules/auth/auth.route";
 
 export default async function router(fastify: FastifyInstance) {
