@@ -11,20 +11,16 @@ dotenv.config();
 const app: FastifyInstance = fastify({
   logger: true,
 });
-app.register(router, { prefix: "/" });
-app.register(cors, {
-  origin: process.env.ORIGIN || "*",
-});
+
+app.register(cors, { origin: process.env.ORIGIN || "*" });
 app.register(helmet);
-app.register(websocket, {
-  options: { maxPayload: 1048576 },
-});
+app.register(websocket, { options: { maxPayload: 1048576 } });
+
+app.register(router, { prefix: "/" });
 
 const start = async (port: number) => {
   try {
-    app.listen({ port: port, host: "0.0.0.0" }, () => {
-      log.info(`Listening on http://localhost:${port}`);
-    });
+    app.listen({ port: port, host: "0.0.0.0" });
   } catch (error) {
     process.exit(1);
   }
