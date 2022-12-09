@@ -135,3 +135,6 @@ dist
 
 # builds
 build
+
+# webstorm
+.idea

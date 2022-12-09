@@ -14,9 +14,7 @@ const SocketGateway = async (fastify: FastifyInstance) => {
       // }
 
       try {
-        connection.socket.send(
-          JSON.stringify({ type: "WebSocket", connected: true })
-        );
+        connection.socket.send(JSON.stringify({ type: "WebSocket", connected: true }));
 
         connection.socket.on("message", async (data: any) => {
           const payload = JSON.parse(data);
@@ -24,13 +22,16 @@ const SocketGateway = async (fastify: FastifyInstance) => {
           if (payload.type) {
             if (payload.type === "send_message") {
               connection.socket.send(JSON.stringify({}));
-
               return;
             }
 
             if (payload.type === "delete_message") {
               connection.socket.send(JSON.stringify({}));
+              return;
+            }
 
+            if(payload.type === "edit_message") {
+              connection.socket.send(JSON.stringify({}));
               return;
             }
 
