@@ -1,13 +1,15 @@
 import db from "../../utils/db";
+import hash from "../../utils/hash"
 
 const createUser = async (body: IUserBody) => {
+  const hashedPassword = await hash(body.password);
   return await db.account.create({
     data: {
       username: body.username,
       image_url: body.image_url,
       suffix: body.suffix,
       email: body.email,
-      password: body.password,
+      password: await hashedPassword,
     },
   });
 };
