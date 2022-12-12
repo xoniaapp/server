@@ -4,7 +4,6 @@ import cors from "@fastify/cors";
 import websocket from "@fastify/websocket";
 import router from "./routes/router";
 import helmet from "@fastify/helmet";
-import log from "./utils/log";
 
 dotenv.config();
 

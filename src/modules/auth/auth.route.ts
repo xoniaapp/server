@@ -1,16 +1,18 @@
 import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import SINGUP_SCHEMA from "./auth.schema";
-import signUp from "./auth.controller";
+import { SINGUP_SCHEMA, LOGIN_SCHEMA } from "./auth.schema";
+import { signIn, signUp } from "./auth.controller"
 
 export default async function authRoute(router: FastifyInstance) {
-  router.withTypeProvider<ZodTypeProvider>().route({
-    method: "GET",
+  router.route({
+    method: "POST",
     url: "/signup",
-    schema: { body: SINGUP_SCHEMA },
-    handler: (req, res) => {
-      res.send("Hello, World!");
-    },
+    handler: signUp,
+  });
+
+  router.route({
+    method: "POST",
+    url: "/signin",
+    handler: signIn,
   });
 }

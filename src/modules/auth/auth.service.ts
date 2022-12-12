@@ -1,12 +1,14 @@
 import db from "../../utils/db";
 import hash from "../../utils/hash"
+import { createHash } from 'node:crypto'
 
-const createUser = async (body: IUserBody) => {
+const createUser = async (body: any) => {
+  // @ts-ignore
   const hashedPassword = await hash(body.password);
   return await db.account.create({
     data: {
       username: body.username,
-      image_url: body.image_url,
+      image_url: `https://avatars.dicebear.com/api/identicon/${createHash('sha512').update(body.email).digest('hex')}.png`,
       suffix: body.suffix,
       email: body.email,
       password: await hashedPassword,
@@ -30,4 +32,4 @@ const getUserByEmail = async (email: string) => {
   });
 };
 
-export default { createUser, getUserById, getUserByEmail };
+export { createUser, getUserById, getUserByEmail };
