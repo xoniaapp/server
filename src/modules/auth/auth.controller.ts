@@ -1,5 +1,4 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { resolve } from "node:path";
 
 import { createUser, getUserByEmail, findSuffix } from "./auth.service"
 
