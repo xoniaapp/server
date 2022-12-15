@@ -1,8 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import { resolve } from "node:path";
 
 import { createUser, getUserByEmail } from "./auth.service"
 
-interface ISignUpResponse {
+interface ISignUpRequest {
   username: string,
   suffix: number,
   email: string,
@@ -10,7 +11,7 @@ interface ISignUpResponse {
 }
 
 const signUp = async (
-  request: FastifyRequest<{ Body: ISignUpResponse }>,
+  request: FastifyRequest<{ Body: ISignUpRequest }>,
   reply: FastifyReply
 ): Promise<void> => {
   const { username, suffix, email, password } = request.body;
@@ -51,16 +52,34 @@ const signUp = async (
   })
 };
 
-interface ISignInResponse {
-  username: string,
+interface ISignInRequest {
+  email: string,
   password: string,
 }
 
 const signIn = async (
-  request: FastifyRequest<{ Body: ISignInResponse }>,
+  request: FastifyRequest<{ Body: ISignInRequest }>,
   reply: FastifyReply
 ): Promise<void> => {
-  const { username, password } = request.body;
+  const { email, password } = request.body;
+
+  const account = await getUserByEmail(email);
+
+  if (!account) {
+    reply.status(404).send({
+      message: "Account was not found",
+      error: "Not Found",
+      statusCode: 404
+    });
+  };
+
+  if (account?.password !== password) {
+    reply.status(401).send({
+      message: "Password is not correct",
+      error: "Unauthorized",
+      statusCode: 401
+    });
+  }
 };
 
 
