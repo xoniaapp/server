@@ -1,9 +1,8 @@
 import db from "../../utils/db";
-import hash from "../../utils/hash"
+import { hash } from "../../utils/hash"
 import { createHash } from 'node:crypto'
 
 const createUser = async (body: any) => {
-  // @ts-ignore
   const hashedPassword = await hash(body.password);
   return await db.account.create({
     data: {
@@ -32,4 +31,12 @@ const getUserByEmail = async (email: string) => {
   });
 };
 
-export { createUser, getUserById, getUserByEmail };
+const findSuffix = async (username: string) => {
+  return await db.account.findFirst({
+    where: {
+      username: username,
+    },
+  })
+}
+
+export { createUser, getUserById, getUserByEmail, findSuffix };

@@ -8,4 +8,4 @@ const verify = async (plain: string, hash: string) => {
   return await argon2.verify(hash, plain);
 };
 
-export default { hash, verify };
+export { hash, verify };

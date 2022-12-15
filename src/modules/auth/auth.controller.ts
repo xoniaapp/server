@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { resolve } from "node:path";
 
-import { createUser, getUserByEmail } from "./auth.service"
+import { createUser, getUserByEmail, findSuffix } from "./auth.service"
 
 interface ISignUpRequest {
   username: string,
@@ -15,40 +15,43 @@ const signUp = async (
   reply: FastifyReply
 ): Promise<void> => {
   const { username, suffix, email, password } = request.body;
+  console.log(request.body);
+
   const data = await getUserByEmail(email);
 
-  if (data) {
-    reply.status(409).send({
-      message: "This email has already been used",
-      error: "Conflict",
-      statusCode: 409
+  if (!data) {
+    const suffixExists = await findSuffix(username);
+
+    if (suffixExists?.suffix === suffix) {
+      reply.status(409).send({
+        message: "This suffix has already been used",
+        error: "Conflict",
+        statusCode: 409
+      })
+
+      return;
+    }
+
+    const user = await createUser({
+      username: username,
+      suffix: suffix,
+      email: email,
+      password: password,
+    })
+
+    reply.status(201).send({
+      message: "Created",
+      payload: user,
+      statusCode: 201
     })
 
     return;
   }
 
-  // @ts-ignore
-  if (data.username === username) {
-    reply.status(409).send({
-      message: "This username has already been used",
-      error: "Conflict",
-      statusCode: 409
-    })
-
-    return;
-  }
-
-  const user = await createUser({
-    username: username,
-    suffix: suffix,
-    email: email,
-    password: password,
-  })
-
-  reply.status(201).send({
-    message: "Created",
-    payload: user,
-    statusCode: 201
+  reply.status(409).send({
+    message: "This email has already been used",
+    error: "Conflict",
+    statusCode: 409
   })
 };
 
