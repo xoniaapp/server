@@ -1,7 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-
 import { createUser, getUserByEmail, findSuffix } from "./auth.service"
-import { ISignInRequest } from "./ISignInRequest";
+import { verify } from "../../utils/hash";
 
 interface ISignUpRequest {
   username: string,
@@ -72,15 +71,21 @@ const signIn = async (
       error: "Not Found",
       statusCode: 404
     });
+
+    return;
   };
 
-  if (account?.password !== password) {
+  if (!await (verify(password, account.password))) {
     reply.status(401).send({
       message: "Password is not correct",
       error: "Unauthorized",
       statusCode: 401
     });
+
+    return;
   }
+
+  reply.status(200).send(account)
 };
 
 export { signUp, signIn };
