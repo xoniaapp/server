@@ -31,7 +31,7 @@ const signUp = async (
 
     const user = await createUser({
       username: username,
-      suffix: suffix,
+      suffix: Number(suffix),
       email: email,
       password: password,
     })
