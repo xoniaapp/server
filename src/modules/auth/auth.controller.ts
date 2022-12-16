@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 
 import { createUser, getUserByEmail, findSuffix } from "./auth.service"
+import { ISignInRequest } from "./ISignInRequest";
 
 interface ISignUpRequest {
   username: string,
@@ -14,8 +15,6 @@ const signUp = async (
   reply: FastifyReply
 ): Promise<void> => {
   const { username, suffix, email, password } = request.body;
-  console.log(request.body);
-
   const data = await getUserByEmail(email);
 
   if (!data) {
@@ -83,6 +82,5 @@ const signIn = async (
     });
   }
 };
-
 
 export { signUp, signIn };
