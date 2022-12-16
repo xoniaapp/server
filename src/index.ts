@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import websocket from "@fastify/websocket";
 import router from "./routes/router";
 import helmet from "@fastify/helmet";
+import { fastifyYupSchema } from "fastify-yup-schema";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const app: FastifyInstance = fastify({
 app.register(cors, { origin: process.env.ORIGIN || "*" });
 app.register(helmet);
 app.register(websocket, { options: { maxPayload: 1048576 } });
+app.register(fastifyYupSchema);
 
 app.register(router, { prefix: "/" });
 

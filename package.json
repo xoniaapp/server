@@ -43,6 +43,6 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "fastify": "^4.10.2",
-    "zod": "^3.19.1"
+    "fastify-yup-schema": "^1.0.4"
   }
 }

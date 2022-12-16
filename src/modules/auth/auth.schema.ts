@@ -1,15 +1,19 @@
-import { z } from "zod";
+import { createYupSchema } from "fastify-yup-schema";
 
-const SINGUP_SCHEMA = z.object({
-  username: z.string().max(32),
-  suffix: z.number().max(4).min(4),
-  email: z.string().email().trim(),
-  password: z.string().max(32).min(8),
-}).strict();
+const SIGNUP_SCHEMA = createYupSchema((yup) => ({
+  body: yup.object({
+    username: yup.string().max(32).min(2).required(),
+    suffix: yup.number().min(4).max(4).required(),
+    email: yup.string().email().trim().required(),
+    password: yup.string().max(64).min(6).required()
+  }),
+}));
 
-const LOGIN_SCHEMA = z.object({
-  email: z.string().max(32),
-  password: z.string().max(32).min(8)
-}).strict()
+const SIGNIN_SCHEMA = createYupSchema((yup) => ({
+  body: yup.object({
+    email: yup.string().email().trim().required(),
+    password: yup.string().max(64).min(6).required()
+  }),
+}));
 
-export { SINGUP_SCHEMA, LOGIN_SCHEMA };
+export { SIGNUP_SCHEMA, SIGNIN_SCHEMA };
