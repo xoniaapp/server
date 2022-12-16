@@ -14,7 +14,9 @@ const SocketGateway = async (fastify: FastifyInstance) => {
       // }
 
       try {
-        connection.socket.send(JSON.stringify({ type: "WebSocket", connected: true }));
+        connection.socket.send(
+          JSON.stringify({ type: "WebSocket", connected: true })
+        );
 
         connection.socket.on("message", async (data: any) => {
           const payload = JSON.parse(data);
@@ -30,7 +32,7 @@ const SocketGateway = async (fastify: FastifyInstance) => {
               return;
             }
 
-            if(payload.type === "edit_message") {
+            if (payload.type === "edit_message") {
               connection.socket.send(JSON.stringify({}));
               return;
             }
@@ -41,6 +43,7 @@ const SocketGateway = async (fastify: FastifyInstance) => {
           connection.socket.send(
             JSON.stringify({ error: "Event type was not included" })
           );
+
           return;
         });
 

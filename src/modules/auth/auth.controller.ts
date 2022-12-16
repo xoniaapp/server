@@ -1,12 +1,12 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { createUser, getUserByEmail, findSuffix } from "./auth.service"
+import { createUser, getUserByEmail, findSuffix } from "./auth.service";
 import { verify } from "../../utils/hash";
 
 interface ISignUpRequest {
-  username: string,
-  suffix: number,
-  email: string,
-  password: string,
+  username: string;
+  suffix: number;
+  email: string;
+  password: string;
 }
 
 const signUp = async (
@@ -23,8 +23,8 @@ const signUp = async (
       reply.status(409).send({
         message: "This suffix has already been used",
         error: "Conflict",
-        statusCode: 409
-      })
+        statusCode: 409,
+      });
 
       return;
     }
@@ -34,13 +34,13 @@ const signUp = async (
       suffix: Number(suffix),
       email: email,
       password: password,
-    })
+    });
 
     reply.status(201).send({
       message: "Created",
       payload: user,
-      statusCode: 201
-    })
+      statusCode: 201,
+    });
 
     return;
   }
@@ -48,13 +48,13 @@ const signUp = async (
   reply.status(409).send({
     message: "This email has already been used",
     error: "Conflict",
-    statusCode: 409
-  })
+    statusCode: 409,
+  });
 };
 
 interface ISignInRequest {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
 const signIn = async (
@@ -69,23 +69,23 @@ const signIn = async (
     reply.status(404).send({
       message: "Account was not found",
       error: "Not Found",
-      statusCode: 404
-    });
-
-    return;
-  };
-
-  if (!await (verify(password, account.password))) {
-    reply.status(401).send({
-      message: "Password is not correct",
-      error: "Unauthorized",
-      statusCode: 401
+      statusCode: 404,
     });
 
     return;
   }
 
-  reply.status(200).send(account)
+  if (!(await verify(password, account.password))) {
+    reply.status(401).send({
+      message: "Password is not correct",
+      error: "Unauthorized",
+      statusCode: 401,
+    });
+
+    return;
+  }
+
+  reply.status(200).send(account);
 };
 
 export { signUp, signIn };
