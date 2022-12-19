@@ -4,4 +4,5 @@ export default {
   send_message: () => {},
   delete_message: () => {},
   edit_message: () => {},
+  get_message: () => {},
 };

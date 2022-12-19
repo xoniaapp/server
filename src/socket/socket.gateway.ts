@@ -22,6 +22,11 @@ const SocketGateway = async (fastify: FastifyInstance) => {
           const payload = JSON.parse(data);
 
           if (payload.type) {
+            if (payload.type === "get_message") {
+              connection.socket.send(JSON.stringify({}));
+              return;
+            }
+
             if (payload.type === "send_message") {
               connection.socket.send(JSON.stringify({}));
               return;
