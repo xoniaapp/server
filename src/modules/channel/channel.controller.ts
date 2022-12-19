@@ -1,23 +1,38 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 
-const createChannel = async (
+const getChannels = async (
   request: FastifyRequest,
   reply: FastifyReply
-): Promise<void> => {};
-
-const deleteChannel = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-): Promise<void> => {};
+): Promise<void> => {
+  reply.status(200).send(request.body);
+};
 
 const getChannel = async (
   request: FastifyRequest,
   reply: FastifyReply
-): Promise<void> => {};
+): Promise<void> => {
+  reply.status(200).send(request.body);
+};
 
-const getChannels = async (
+const updateChannel = async (
   request: FastifyRequest,
   reply: FastifyReply
-): Promise<void> => {};
+): Promise<void> => {
+  reply.status(200).send(request.body);
+};
 
-export { createChannel, deleteChannel, getChannel, getChannels };
+const createChannel = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<void> => {
+  reply.status(200).send(request.body);
+};
+
+const deleteChannel = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<void> => {
+  reply.status(200).send(request.body);
+};
+
+export { createChannel, deleteChannel, getChannel, getChannels, updateChannel };

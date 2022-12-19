@@ -1,27 +1,35 @@
 import { FastifyInstance } from "fastify";
 
+import { createChannel, deleteChannel, getChannel, getChannels, updateChannel } from "./channel.controller"
+
 export default async function channelRoute(router: FastifyInstance) {
   router.route({
     method: "GET",
-    url: "/:id",
-    handler: () => {},
+    url: "/",
+    handler: getChannels,
   });
 
   router.route({
-    method: "PUT",
+    method: "GET",
     url: "/:id",
-    handler: () => {},
-  });
-
-  router.route({
-    method: "DELETE",
-    url: "/:id",
-    handler: () => {},
+    handler: getChannel,
   });
 
   router.route({
     method: "POST",
     url: "/",
-    handler: () => {},
+    handler: createChannel,
+  });
+
+  router.route({
+    method: "PUT",
+    url: "/:id",
+    handler: updateChannel,
+  });
+
+  router.route({
+    method: "DELETE",
+    url: "/:id",
+    handler: deleteChannel,
   });
 }
