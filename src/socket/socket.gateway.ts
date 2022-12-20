@@ -1,5 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
+import { get_message, get_messages, send_message, edit_message, delete_message } from "./socket.service"
+
 const SocketGateway = async (fastify: FastifyInstance) => {
   fastify.route({
     method: "GET",
@@ -22,6 +24,11 @@ const SocketGateway = async (fastify: FastifyInstance) => {
           const payload = JSON.parse(data);
 
           if (payload.type) {
+            if (payload.type === "get_messages") {
+              connection.socket.send(JSON.stringify({}));
+              return;
+            }
+
             if (payload.type === "get_message") {
               connection.socket.send(JSON.stringify({}));
               return;
