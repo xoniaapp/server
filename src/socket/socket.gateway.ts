@@ -1,6 +1,12 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-import { get_message, get_messages, send_message, edit_message, delete_message } from "./socket.service"
+import {
+  get_message,
+  get_messages,
+  send_message,
+  edit_message,
+  delete_message,
+} from "./socket.service";
 
 const SocketGateway = async (fastify: FastifyInstance) => {
   fastify.route({

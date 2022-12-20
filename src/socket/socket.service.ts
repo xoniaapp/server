@@ -13,7 +13,7 @@ const get_messages = async (channelId: string) => {
     where: {
       channelId: channelId,
     },
-  })
+  });
 };
 
 const send_message = async (body: any) => {
@@ -47,8 +47,14 @@ const delete_message = async (id: string) => {
   return await db.message.delete({
     where: {
       id: id,
-    }
-  })
+    },
+  });
 };
 
-export { get_message, get_messages, send_message, edit_message, delete_message }
+export {
+  get_message,
+  get_messages,
+  send_message,
+  edit_message,
+  delete_message,
+};
