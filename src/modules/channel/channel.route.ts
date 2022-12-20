@@ -1,12 +1,18 @@
 import { FastifyInstance } from "fastify";
 
-import { createChannel, deleteChannel, getChannel, getChannels, updateChannel } from "./channel.controller"
+import {
+  createChannel,
+  deleteChannel,
+  getChannel,
+  getChannels,
+  updateChannel,
+} from "./channel.controller";
 import {
   GET_SCHEMA,
   CREATE_CHANNEL_SCHEMA,
   DELETE_CHANNEL_SCHEMA,
-  UPDATE_CHANNEL_SCHEMA
-} from "./channel.schema"
+  UPDATE_CHANNEL_SCHEMA,
+} from "./channel.schema";
 
 export default async function channelRoute(router: FastifyInstance) {
   router.route({
