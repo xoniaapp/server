@@ -31,29 +31,55 @@ const SocketGateway = async (fastify: FastifyInstance) => {
 
           if (payload.type) {
             if (payload.type === "get_messages") {
-              connection.socket.send(JSON.stringify({}));
+              const messages = await get_messages(payload.data.channelId);
+              connection.socket.send(JSON.stringify(messages));
+
               return;
-            }
+            };
 
             if (payload.type === "get_message") {
-              connection.socket.send(JSON.stringify({}));
+              const message = await get_message(payload.data.messageId);
+              connection.socket.send(JSON.stringify(message));
+
               return;
-            }
+            };
 
             if (payload.type === "send_message") {
-              connection.socket.send(JSON.stringify({}));
+              const message = await send_message({
+                text: payload.data.text,
+                attachment: payload.data.attachment,
+                reaction: payload.data.reaction,
+                authorId: payload.data.authorId,
+                channelId: payload.data.channelId,
+                guildId: payload.data.guildId,
+                groupId: payload.data.groupId,
+              });
+
+              connection.socket.send(JSON.stringify(payload.data));
               return;
-            }
+            };
 
             if (payload.type === "delete_message") {
-              connection.socket.send(JSON.stringify({}));
+              const message = await delete_message(payload.data.id);
+
+              connection.socket.send(JSON.stringify(message));
+
               return;
-            }
+            };
 
             if (payload.type === "edit_message") {
-              connection.socket.send(JSON.stringify({}));
+              const message = await edit_message(
+                {
+                  text: payload.data.text,
+                  attachment: payload.data.attachment,
+                  reaction: payload.data.reaction,
+                },
+                payload.data.id
+              );
+
+              connection.socket.send(JSON.stringify(message));
               return;
-            }
+            };
 
             return;
           }
