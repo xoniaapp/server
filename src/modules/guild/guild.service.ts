@@ -1,14 +1,5 @@
 import db from "../../utils/db";
 
-interface ICreateGuild {
-  name: string,
-  icon_url: string,
-  banner_bg: string,
-  invite_bg: string,
-  partner: boolean,
-  owner_id: string,
-}
-
 const createGuild = async (body: ICreateGuild) => {
   return await db.guild.create({
     data: {

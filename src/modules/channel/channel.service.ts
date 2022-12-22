@@ -1,6 +1,6 @@
 import db from "../../utils/db";
 
-const createChannel = async (body: any) => {
+const createChannel = async (body: ICreateChannel) => {
   return await db.channel.create({
     data: {
       name: body.name,
@@ -19,7 +19,7 @@ const getChannel = async (id: string) => {
   });
 };
 
-const updateChannel = async (body: any) => {
+const updateChannel = async (body: IUpdateChannel) => {
   return db.channel.updateMany({
     data: {
       name: body.name,

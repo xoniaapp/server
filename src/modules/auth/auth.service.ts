@@ -2,7 +2,7 @@ import db from "../../utils/db";
 import { hash } from "../../utils/hash";
 import { createHash } from "node:crypto";
 
-const createUser = async (body: any) => {
+const createUser = async (body: ICreateUser) => {
   const hashedPassword = await hash(body.password);
   return await db.account.create({
     data: {
@@ -43,4 +43,18 @@ const findSuffix = async (username: string) => {
   });
 };
 
-export { createUser, getUserById, getUserByEmail, findSuffix };
+const updateUser = async (body: IUpdateUser, id: string) => {
+  return await db.account.update({
+    where: {
+      id: id,
+    },
+    data: {
+      username: body.username,
+      image_url: body.image_url,
+      email: body.email,
+      password: await hash(body.password!) || undefined,
+    },
+  })
+}
+
+export { createUser, getUserById, getUserByEmail, findSuffix, updateUser };
