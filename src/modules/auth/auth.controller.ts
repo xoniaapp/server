@@ -81,8 +81,6 @@ const signIn = async (
       error: "Unauthorized",
       statusCode: 401,
     });
-
-    return;
   }
 
   reply.status(200).send(account);
