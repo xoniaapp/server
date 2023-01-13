@@ -1,5 +1,5 @@
 {
-  "name": "@xoniaapp/server-node",
+  "name": "@xoniaapp/server",
   "version": "0.0.0",
   "description": "v4 server build with Node.js & TypeScript.",
   "main": "./src/index.ts",
