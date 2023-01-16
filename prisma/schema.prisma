@@ -30,16 +30,17 @@ model bans {
 }
 
 model channels {
-  id            String     @id
-  created_at    DateTime?  @db.Timestamptz(6)
-  updated_at    DateTime?  @db.Timestamptz(6)
+  id            String      @id
+  type          ChannelType
+  created_at    DateTime?   @db.Timestamptz(6)
+  updated_at    DateTime?   @db.Timestamptz(6)
   guild_id      String?
   name          String?
   is_public     Boolean?
   is_dm         Boolean?
   is_group      Boolean?
-  last_activity DateTime?  @db.Timestamptz(6)
-  guilds        guilds?    @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_guilds_channels")
+  last_activity DateTime?   @db.Timestamptz(6)
+  guilds        guilds?     @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_guilds_channels")
   messages      messages[]
 
   @@index([created_at], map: "idx_channels_created_at")
@@ -170,4 +171,12 @@ enum Flags {
   Suspended
   Deleted
   Banned
+}
+
+enum ChannelType {
+  VOICE
+  ANNOUNCEMENT
+  FORUM
+  TEXT
+  STAGE
 }
