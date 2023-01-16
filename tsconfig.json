@@ -1,4 +1,5 @@
 {
+  "baseUrl": "./src",
   "compilerOptions": {
     "outDir": "build",
     "target": "es2016",
