@@ -34,6 +34,7 @@ const createUser = async (body: ICreateUser) => {
       tag: true,
       username: true,
       email: true,
+      verified: true,
       password: false,
       image: true,
       status: true,

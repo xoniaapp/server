@@ -8,9 +8,9 @@ datasource db {
 }
 
 model attachments {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String    @id
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   url        String?
   file_type  String?
   filename   String?
@@ -131,6 +131,7 @@ model users {
   system                                             Boolean           @default(false)
   avatar                                             String?
   avatarUrl                                          String
+  verified                                           Boolean           @default(false)
   discriminator                                      String
   tag                                                String            @unique
   username                                           String
