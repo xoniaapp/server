@@ -27,6 +27,7 @@
   "homepage": "https://github.com/xoniaapp/server-node#readme",
   "devDependencies": {
     "@types/node": "^18.11.11",
+    "@types/uuid": "^9.0.0",
     "@types/ws": "^8.5.3",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.0",
@@ -43,6 +44,8 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "fastify": "^4.10.2",
-    "fastify-yup-schema": "^1.0.4"
+    "fastify-yup-schema": "^1.0.4",
+    "ioredis": "^5.2.5",
+    "uuid": "^9.0.0"
   }
 }

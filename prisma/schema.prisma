@@ -8,9 +8,9 @@ datasource db {
 }
 
 model attachments {
-  id         String    @id
-  created_at DateTime? @db.Timestamptz(6)
-  updated_at DateTime? @db.Timestamptz(6)
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   url        String?
   file_type  String?
   filename   String?
@@ -32,8 +32,8 @@ model bans {
 model channels {
   id            String      @id
   type          ChannelType
-  created_at    DateTime?   @db.Timestamptz(6)
-  updated_at    DateTime?   @db.Timestamptz(6)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   guild_id      String?
   name          String?
   is_public     Boolean?
@@ -43,7 +43,7 @@ model channels {
   guilds        guilds?     @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_guilds_channels")
   messages      messages[]
 
-  @@index([created_at], map: "idx_channels_created_at")
+  @@index([createdAt], map: "idx_channels_created_at")
   @@index([guild_id], map: "idx_channels_guild_id")
   @@index([is_public], map: "idx_channels_is_public")
 }
@@ -53,11 +53,11 @@ model dm_members {
   user_id    String
   channel_id String
   is_open    Boolean?
-  created_at DateTime? @db.Timestamptz(6)
-  updated_at DateTime? @db.Timestamptz(6)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@id([id, user_id, channel_id])
-  @@index([created_at], map: "idx_dm_members_created_at")
+  @@index([createdAt], map: "idx_dm_members_created_at")
 }
 
 model friend_requests {
@@ -79,9 +79,10 @@ model friends {
 }
 
 model guilds {
-  id           String     @id
-  created_at   DateTime?  @db.Timestamptz(6)
-  updated_at   DateTime?  @db.Timestamptz(6)
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   name         String
   owner_id     String
   icon         String?
@@ -89,26 +90,27 @@ model guilds {
   bans         bans[]
   channels     channels[]
 
-  @@index([created_at], map: "idx_guilds_created_at")
+  @@index([createdAt], map: "idx_guilds_created_at")
 }
 
 model members {
-  user_id    String
-  guild_id   String
-  nickname   String?
-  color      String?
-  last_seen  DateTime? @db.Timestamptz(6)
-  created_at DateTime? @db.Timestamptz(6)
-  updated_at DateTime? @db.Timestamptz(6)
+  user_id   String
+  guild_id  String
+  nickname  String?
+  color     String?
+  last_seen DateTime? @db.Timestamptz(6)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@id([user_id, guild_id])
-  @@index([created_at], map: "idx_members_created_at")
+  @@index([createdAt], map: "idx_members_created_at")
 }
 
 model messages {
-  id          String        @id
-  created_at  DateTime?     @db.Timestamptz(6)
-  updated_at  DateTime?     @db.Timestamptz(6)
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   text        String?
   user_id     String?
   channel_id  String?
@@ -117,14 +119,14 @@ model messages {
   users       users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_message")
 
   @@index([channel_id], map: "idx_messages_channel_id")
-  @@index([created_at], map: "idx_messages_created_at")
+  @@index([createdAt], map: "idx_messages_created_at")
   @@index([user_id], map: "idx_messages_user_id")
 }
 
 model users {
   id                                                 String            @id @unique
-  created_at                                         DateTime?         @db.Timestamptz(6)
-  updated_at                                         DateTime?         @db.Timestamptz(6)
+  createdAt                                          DateTime          @default(now())
+  updatedAt                                          DateTime          @updatedAt
   bot                                                Boolean
   system                                             Boolean           @default(false)
   avatar                                             String?
@@ -146,14 +148,14 @@ model users {
   friends_friends_user_idTousers                     friends[]         @relation("friends_user_idTousers")
   messages                                           messages[]
 
-  @@index([created_at], map: "idx_users_created_at")
+  @@index([createdAt], map: "idx_users_created_at")
   @@index([online], map: "idx_users_is_online")
 }
 
 enum UserStatus {
   Online
   Idle
-  DoNotDistrub
+  DoNotDisturb
   Offline
 }
 
@@ -168,6 +170,7 @@ enum Badges {
 }
 
 enum Flags {
+  Nothing
   Suspended
   Deleted
   Banned
