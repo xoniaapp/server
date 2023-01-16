@@ -1,13 +1,13 @@
 declare interface ICreateUser {
-  username: string,
-  suffix: number,
-  email: string,
-  password: string,
+  username: string;
+  suffix: number;
+  email: string;
+  password: string;
 }
 
 declare interface IUpdateUser {
-  username: string,
-  image_url: string | undefined,
-  email: string,
-  password: string | undefined,
+  username: string;
+  image_url: string | undefined;
+  email: string;
+  password: string | undefined;
 }
