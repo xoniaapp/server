@@ -92,7 +92,6 @@ const signIn = async (
   reply: FastifyReply
 ): Promise<void> => {
   const { email, password } = request.body;
-
   const account = await getUserByEmail(email);
 
   if (!account) {
@@ -115,7 +114,26 @@ const signIn = async (
     return;
   }
 
-  reply.status(200).send(account);
+  reply.status(200).send({
+    "id": account.id,
+    "createdAt": account.createdAt,
+    "updatedAt": account.updatedAt,
+    "bot": account.bot,
+    "system": account.system,
+    "avatar": account.avatar,
+    "avatarUrl": account.avatarUrl,
+    "discriminator": account.discriminator,
+    "tag": account.tag,
+    "username": account.username,
+    "email": account.email,
+    "verified": account.verified,
+    "image": account.image,
+    "status": account.status,
+    "badges": account.badges,
+    "flags": account.flags,
+    "online": account.online,
+    "bans": account.bans
+  });
 };
 
 export { signUp, signIn };
