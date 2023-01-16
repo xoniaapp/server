@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { getUserByEmail, createUser } from "./user.service";
+import { getUserByEmail, createUser, deleteUserById } from "./user.service";
 import { verify } from "../../utils/argon2";
 import crypto from "crypto";
 import { AVATAR_CONTENT_URL } from "../../config/config";
@@ -8,6 +8,11 @@ import { Generate } from "../../utils/id";
 
 interface ISignUpRequest {
   username: string;
+  email: string;
+  password: string;
+}
+
+interface ISignInRequest {
   email: string;
   password: string;
 }
@@ -82,11 +87,6 @@ const signUp = async (
   });
 };
 
-interface ISignInRequest {
-  email: string;
-  password: string;
-}
-
 const signIn = async (
   request: FastifyRequest<{ Body: ISignInRequest }>,
   reply: FastifyReply
@@ -115,25 +115,48 @@ const signIn = async (
   }
 
   reply.status(200).send({
-    "id": account.id,
-    "createdAt": account.createdAt,
-    "updatedAt": account.updatedAt,
-    "bot": account.bot,
-    "system": account.system,
-    "avatar": account.avatar,
-    "avatarUrl": account.avatarUrl,
-    "discriminator": account.discriminator,
-    "tag": account.tag,
-    "username": account.username,
-    "email": account.email,
-    "verified": account.verified,
-    "image": account.image,
-    "status": account.status,
-    "badges": account.badges,
-    "flags": account.flags,
-    "online": account.online,
-    "bans": account.bans
+    id: account.id,
+    createdAt: account.createdAt,
+    updatedAt: account.updatedAt,
+    bot: account.bot,
+    system: account.system,
+    avatar: account.avatar,
+    avatarUrl: account.avatarUrl,
+    discriminator: account.discriminator,
+    tag: account.tag,
+    username: account.username,
+    email: account.email,
+    verified: account.verified,
+    image: account.image,
+    status: account.status,
+    badges: account.badges,
+    flags: account.flags,
+    online: account.online,
+    bans: account.bans,
   });
 };
 
-export { signUp, signIn };
+const getUser = async (
+  request: FastifyRequest<{ Body: ISignInRequest }>,
+  reply: FastifyReply
+): Promise<void> => {};
+
+const updateUser = async (
+  request: FastifyRequest<{ Body: ISignInRequest }>,
+  reply: FastifyReply
+): Promise<void> => {};
+
+const deleteUser = async (
+  request: FastifyRequest<{ Body: ISignInRequest }>,
+  reply: FastifyReply
+): Promise<void> => {
+  // TODO: Implement JWT auth
+
+  reply.status(200).send({
+    statusCode: 200,
+    data: await deleteUserById(""),
+    message: "Success",
+  });
+};
+
+export { signUp, signIn, deleteUser };
