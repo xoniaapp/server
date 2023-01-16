@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { SocketService } from "./socket.service";
 
 const SocketGateway = async (fastify: FastifyInstance) => {
   fastify.route({
@@ -14,31 +15,17 @@ const SocketGateway = async (fastify: FastifyInstance) => {
       // }
 
       try {
+        const socket = new SocketService("token");
         connection.socket.send(
           JSON.stringify({ type: "WebSocket", connected: true })
         );
 
         connection.socket.on("message", async (data: any) => {
           const payload = JSON.parse(data);
+          
 
           if (payload.type) {
-            if (payload.type === "get_messages") {
-              return;
-            }
-
-            if (payload.type === "get_message") {
-              return;
-            }
-
-            if (payload.type === "send_message") {
-              return;
-            }
-
-            if (payload.type === "delete_message") {
-              return;
-            }
-
-            if (payload.type === "edit_message") {
+            if ("") {
               return;
             }
 
