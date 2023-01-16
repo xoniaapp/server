@@ -135,6 +135,8 @@ model users {
   password                                           String
   image                                              String?
   status                                             UserStatus
+  badges                                             Badges
+  flags                                              Flags
   online                                             Boolean?
   bans                                               bans[]
   friend_requests_friend_requests_receiver_idTousers friend_requests[] @relation("friend_requests_receiver_idTousers")
@@ -152,4 +154,20 @@ enum UserStatus {
   Idle
   DoNotDistrub
   Offline
+}
+
+enum Badges {
+  Developer
+  Supporter
+  SecurityDisclosure
+  Founder
+  PlatformModerator
+  ActiveSupporter
+  EarlyAdopter
+}
+
+enum Flags {
+  Suspended
+  Deleted
+  Banned
 }
