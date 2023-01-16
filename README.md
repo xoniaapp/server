@@ -1,4 +1,4 @@
-# server-node
+# server
 
 # Tech Stack
 

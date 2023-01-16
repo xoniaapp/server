@@ -7,132 +7,136 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Account {
-  id        String   @id @unique @default(cuid()) @map("_id")
-  username  String
-  image_url String
-  suffix    Int
-  email     String   @unique
-  password String
-  verified  Boolean  @default(false)
-  donor     Boolean  @default(false)
-  badges    String[]
+model attachments {
+  id         String    @id
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  url        String?
+  file_type  String?
+  filename   String?
+  message_id String?
+  messages   messages? @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_messages_attachment")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Guilds   Guild[]
-  Groups   Group[]
-  Invites  Invite[]
-  Messages Message[]
-  Friends  Friend[]
-  DMs      DM[]
+  @@index([message_id], map: "idx_attachments_message_id")
 }
 
-// TODO: Profile support.
-model Profile {
-  id String @id @unique @default(cuid()) @map("_id")
+model bans {
+  guild_id String
+  user_id  String
+  guilds   guilds @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_guild")
+  users    users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_user")
+
+  @@id([guild_id, user_id])
 }
 
-model Friend {
-  id        String  @id @unique @default(cuid()) @map("_id")
-  username  String
-  Account   Account @relation(fields: [accountId], references: [id])
-  accountId String
+model channels {
+  id            String     @id
+  created_at    DateTime?  @db.Timestamptz(6)
+  updated_at    DateTime?  @db.Timestamptz(6)
+  guild_id      String?
+  name          String?
+  is_public     Boolean?
+  is_dm         Boolean?
+  last_activity DateTime?  @db.Timestamptz(6)
+  guilds        guilds?    @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_guilds_channels")
+  messages      messages[]
+
+  @@index([created_at], map: "idx_channels_created_at")
+  @@index([guild_id], map: "idx_channels_guild_id")
+  @@index([is_public], map: "idx_channels_is_public")
 }
 
-model Group {
-  id       String    @id @unique @default(cuid()) @map("_id")
-  name     String
-  Owner    Account   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  owner_id String
-  Messages Message[]
+model dm_members {
+  id         String
+  user_id    String
+  channel_id String
+  is_open    Boolean?
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@id([id, user_id, channel_id])
+  @@index([created_at], map: "idx_dm_members_created_at")
 }
 
-model Guild {
-  id        String  @id @unique @default(cuid()) @map("_id")
-  name      String
-  icon_url  String
-  banner_bg String
-  invite_bg String
-  partner   Boolean @default(false)
-  owner_id  String
+model friend_requests {
+  sender_id                                String
+  receiver_id                              String
+  users_friend_requests_receiver_idTousers users  @relation("friend_requests_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_requests")
+  users_friend_requests_sender_idTousers   users  @relation("friend_requests_sender_idTousers", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_user")
 
-  invites Invite[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Owner    Account   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  Channels Channel[]
-  Messages Message[]
+  @@id([sender_id, receiver_id])
 }
 
-model Channel {
-  id      String      @id @unique @default(cuid()) @map("_id")
-  name    String
-  type    ChannelType
-  private Boolean
-  guildId String
+model friends {
+  user_id                        String
+  friend_id                      String
+  users_friends_friend_idTousers users  @relation("friends_friend_idTousers", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_friends")
+  users_friends_user_idTousers   users  @relation("friends_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_user")
 
-  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Messages  Message[]
+  @@id([user_id, friend_id])
 }
 
-model Message {
-  id String @id @unique @default(cuid()) @map("_id")
+model guilds {
+  id           String     @id
+  created_at   DateTime?  @db.Timestamptz(6)
+  updated_at   DateTime?  @db.Timestamptz(6)
+  name         String
+  owner_id     String
+  icon         String?
+  invite_links String[]
+  bans         bans[]
+  channels     channels[]
 
-  text       String
-  attachment String
-  reaction   String[]
-
-  authorId  String
-  channelId String
-  guildId   String?
-  groupId   String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  Author  Account @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  Guild   Guild?  @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  Group   Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  @@index([created_at], map: "idx_guilds_created_at")
 }
 
-model Invite {
-  id           String @id @unique @default(cuid()) @map("_id")
-  code         String
-  guildId      String
-  generated_by String
-  time_used    Int
-  // TODO: Add expiry
+model members {
+  user_id    String
+  guild_id   String
+  nickname   String?
+  color      String?
+  last_seen  DateTime? @db.Timestamptz(6)
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Account Account @relation(fields: [generated_by], references: [id], onDelete: Cascade)
-  Guild   Guild   @relation(fields: [guildId], references: [id])
+  @@id([user_id, guild_id])
+  @@index([created_at], map: "idx_members_created_at")
 }
 
-model DM {
-  id        String  @id @unique @default(cuid()) @map("_id")
-  is_friend Boolean
-  author_id String
-  user_id   String
-  Account   Account @relation(fields: [author_id], references: [id])
+model messages {
+  id          String        @id
+  created_at  DateTime?     @db.Timestamptz(6)
+  updated_at  DateTime?     @db.Timestamptz(6)
+  text        String?
+  user_id     String?
+  channel_id  String?
+  attachments attachments[]
+  channels    channels?     @relation(fields: [channel_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_channels_messages")
+  users       users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_message")
+
+  @@index([channel_id], map: "idx_messages_channel_id")
+  @@index([created_at], map: "idx_messages_created_at")
+  @@index([user_id], map: "idx_messages_user_id")
 }
 
-enum ChannelType {
-  VOICE
-  ANNOUNCEMENT
-  FORUM
-  TEXT
-  STAGE
+model users {
+  id                                                 String            @id
+  created_at                                         DateTime?         @db.Timestamptz(6)
+  updated_at                                         DateTime?         @db.Timestamptz(6)
+  bot                                                Boolean
+  system                                             Boolean           @default(false)
+  username                                           String
+  email                                              String            @unique(map: "idx_users_email")
+  password                                           String
+  image                                              String?
+  is_online                                          Boolean?          @default(true)
+  bans                                               bans[]
+  friend_requests_friend_requests_receiver_idTousers friend_requests[] @relation("friend_requests_receiver_idTousers")
+  friend_requests_friend_requests_sender_idTousers   friend_requests[] @relation("friend_requests_sender_idTousers")
+  friends_friends_friend_idTousers                   friends[]         @relation("friends_friend_idTousers")
+  friends_friends_user_idTousers                     friends[]         @relation("friends_user_idTousers")
+  messages                                           messages[]
+
+  @@index([created_at], map: "idx_users_created_at")
+  @@index([is_online], map: "idx_users_is_online")
 }
