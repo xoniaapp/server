@@ -135,7 +135,7 @@ model users {
   password                                           String
   image                                              String?
   status                                             UserStatus
-  badges                                             Badges
+  badges                                             Badges[]
   flags                                              Flags
   online                                             Boolean?
   bans                                               bans[]
