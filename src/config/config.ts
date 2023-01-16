@@ -1,3 +1,3 @@
-const AVATAR_CONTENT_URL: string = `https://api.dicebear.com/`
+const AVATAR_CONTENT_URL: string = `https://api.dicebear.com/`;
 
-export { AVATAR_CONTENT_URL }
+export { AVATAR_CONTENT_URL };

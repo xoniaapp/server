@@ -22,7 +22,6 @@ const SocketGateway = async (fastify: FastifyInstance) => {
 
         connection.socket.on("message", async (data: any) => {
           const payload = JSON.parse(data);
-          
 
           if (payload.type) {
             if ("") {

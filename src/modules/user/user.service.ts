@@ -46,7 +46,7 @@ const createUser = async (body: ICreateUser) => {
       friends_friends_friend_idTousers: false,
       friends_friends_user_idTousers: false,
       messages: false,
-    }
+    },
   });
 };
 
