@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { getUserByEmail, createUser, deleteUserById } from "./user.service";
 import { verify } from "../../utils/argon2";
-import crypto from "crypto";
+import Crypto from "../../utils/crypto";
 import { AVATAR_CONTENT_URL } from "../../config/config";
 import db from "../../utils/db";
 import { Generate } from "../../utils/id";
@@ -21,17 +21,14 @@ const signUp = async (
   request: FastifyRequest<{ Body: ISignUpRequest }>,
   reply: FastifyReply
 ): Promise<void> => {
-  const { username, email, password } = request.body;
-  const discriminator = (Math.floor(Math.random() * 10000) + 10000)
-    .toString()
-    .substring(1);
-  const tag = `${username}#${discriminator}`;
-  const avatarHash = crypto
-    .createHash("md5")
-    .update(email)
-    .digest("hex")
-    .toString();
   const id = new Generate();
+
+  const { username, email, password } = request.body;
+
+  const discriminator = id.discriminator();
+  const avatarHash = new Crypto().md_hash(username);
+
+  const tag = `${username}#${discriminator}`;
 
   if (await getUserByEmail(email)) {
     reply.status(409).send({
@@ -114,26 +111,26 @@ const signIn = async (
     return;
   }
 
-  reply.status(200).send({
-    id: account.id,
-    createdAt: account.createdAt,
-    updatedAt: account.updatedAt,
-    bot: account.bot,
-    system: account.system,
-    avatar: account.avatar,
-    avatarUrl: account.avatarUrl,
-    discriminator: account.discriminator,
-    tag: account.tag,
-    username: account.username,
-    email: account.email,
-    verified: account.verified,
-    image: account.image,
-    status: account.status,
-    badges: account.badges,
-    flags: account.flags,
-    online: account.online,
-    bans: account.bans,
-  });
+  // reply.status(200).send({
+  //   id: account.id,
+  //   createdAt: account.createdAt,
+  //   updatedAt: account.updatedAt,
+  //   bot: account.bot,
+  //   system: account.system,
+  //   avatar: account.avatar,
+  //   avatarUrl: account.avatarUrl,
+  //   discriminator: account.discriminator,
+  //   tag: account.tag,
+  //   username: account.username,
+  //   email: account.email,
+  //   verified: account.verified,
+  //   image: account.image,
+  //   status: account.status,
+  //   badges: account.badges,
+  //   flags: account.flags,
+  //   online: account.online,
+  //   bans: account.bans,
+  // });
 };
 
 const getUser = async (

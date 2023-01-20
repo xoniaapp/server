@@ -5,6 +5,7 @@ import websocket from "@fastify/websocket";
 import router from "./routes/router";
 import helmet from "@fastify/helmet";
 import { fastifyYupSchema } from "fastify-yup-schema";
+import { fastifyJwt } from "@fastify/jwt";
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ app.register(cors, { origin: process.env.ORIGIN || "*" });
 app.register(helmet);
 app.register(websocket, { options: { maxPayload: 1048576 } });
 app.register(fastifyYupSchema);
+app.register(fastifyJwt, {
+  secret: process.env.JWT_SECRET_KEY!,
+});
 
 app.register(router, { prefix: "/" });
 
