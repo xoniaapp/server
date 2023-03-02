@@ -1,11 +1,9 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
 import SocketGateway from "../socket/socket.gateway";
-import userRoute from "../modules/user/user.route";
 
 export default async function router(fastify: FastifyInstance) {
   fastify.register(SocketGateway, { prefix: "/ws" });
-  fastify.register(userRoute, { prefix: "/" });
 
   fastify.get("/health", (request: FastifyRequest, reply: FastifyReply) => {
     reply.status(200).send({
