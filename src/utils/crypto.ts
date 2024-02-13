@@ -8,6 +8,7 @@ export default class Crypto {
   md_hash(value: string) {
     return crypto.createHash("md5").update(value).digest("hex").toString();
   }
+  
   /**
    * Returns SHA256 hash based on given value
    * @param {string} value - The value to hash

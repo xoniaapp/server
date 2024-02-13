@@ -8,25 +8,31 @@ datasource db {
 }
 
 model attachments {
-  id         String    @id
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  url        String?
-  file_type  String?
-  filename   String?
-  message_id String?
-  messages   messages? @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_messages_attachment")
+  id        String   @id
+  url       String
+  file_type String
+  filename  String
+  message   messages @relation(fields: [message_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_messages_attachment")
+
+  message_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([message_id], map: "idx_attachments_message_id")
+  @@map("attachments")
 }
 
 model bans {
+  guilds guilds @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_guild")
+  users  users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_user")
+
   guild_id String
   user_id  String
-  guilds   guilds @relation(fields: [guild_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_guild")
-  users    users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_bans_user")
 
   @@id([guild_id, user_id])
+  @@index([guild_id, user_id])
+  @@map("bans")
 }
 
 model channels {
@@ -52,36 +58,39 @@ model dm_members {
   id         String
   user_id    String
   channel_id String
-  is_open    Boolean?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+
+  is_open Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@id([id, user_id, channel_id])
   @@index([createdAt], map: "idx_dm_members_created_at")
+  @@map("dms")
 }
 
 model friend_requests {
-  sender_id                                String
-  receiver_id                              String
-  users_friend_requests_receiver_idTousers users  @relation("friend_requests_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_requests")
-  users_friend_requests_sender_idTousers   users  @relation("friend_requests_sender_idTousers", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_user")
+  sender_id   String
+  receiver_id String
+
+  users_friend_requests_receiver_idTousers users @relation("friend_requests_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_requests")
+  users_friend_requests_sender_idTousers   users @relation("friend_requests_sender_idTousers", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friend_requests_user")
 
   @@id([sender_id, receiver_id])
 }
 
 model friends {
-  user_id                        String
-  friend_id                      String
-  users_friends_friend_idTousers users  @relation("friends_friend_idTousers", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_friends")
-  users_friends_user_idTousers   users  @relation("friends_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_user")
+  user_id   String
+  friend_id String
+
+  users_friends_friend_idTousers users @relation("friends_friend_idTousers", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_friends")
+  users_friends_user_idTousers   users @relation("friends_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_friends_user")
 
   @@id([user_id, friend_id])
 }
 
 model guilds {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id String @id
 
   name         String
   owner_id     String
@@ -89,6 +98,9 @@ model guilds {
   invite_links String[]
   bans         bans[]
   channels     channels[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([createdAt], map: "idx_guilds_created_at")
 }
